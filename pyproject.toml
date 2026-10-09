@@ -31,7 +31,7 @@ dependencies = [
 
 [project.optional-dependencies]
 full = ["Pillow>=9.0.0"]
-dev = ["pytest>=7.0", "responses>=0.23"]
+dev = ["pytest>=7.0", "responses>=0.23", "ruff>=0.16"]
 
 [project.urls]
 Documentation = "https://pixbin.net/docs"
@@ -48,3 +48,34 @@ include = ["pixbin*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py38"
+# Code blocks in the README are illustrative, not a formatting target.
+extend-exclude = ["README.md"]
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # Pyflakes
+    "I",      # isort
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "UP",     # pyupgrade
+    "RUF",    # Ruff-specific rules
+    "G",      # flake8-logging-format
+    "DTZ",    # flake8-datetimez
+    "BLE",    # flake8-blind-except
+    "EXE",    # flake8-executable
+]
+ignore = [
+    "BLE001",  # Blind except is intentional for the JSON and PIL fallbacks
+]
+
+[tool.ruff.lint.per-file-ignores]
+"conftest.py" = ["F401"]  # Fixtures may appear unused
+
+[tool.ruff.lint.isort]
+known-first-party = ["pixbin"]

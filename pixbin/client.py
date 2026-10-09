@@ -7,10 +7,11 @@ For usage examples, see the package docstring: help(pixbin)
 
 import io
 import mimetypes
-import requests
 import time
 from pathlib import Path
-from typing import Dict, Any, BinaryIO, Union, Tuple
+from typing import Any, BinaryIO, Dict, Tuple, Union
+
+import requests
 
 # Optional PIL for dimension extraction
 try:
@@ -55,9 +56,7 @@ class PixbinClient:
         timeout: Request timeout in seconds (default: 30)
     """
 
-    def __init__(
-        self, api_token: str, base_url: str = "https://pixbin.net", timeout: int = 30
-    ):
+    def __init__(self, api_token: str, base_url: str = "https://pixbin.net", timeout: int = 30):
         self.api_token = api_token
         self.base_url = base_url.rstrip("/")
         self.timeout = timeout
@@ -160,9 +159,7 @@ class PixbinClient:
 
             filename = file_path.name
             file_size = file_path.stat().st_size
-            content_type = (
-                mimetypes.guess_type(str(file_path))[0] or "application/octet-stream"
-            )
+            content_type = mimetypes.guess_type(str(file_path))[0] or "application/octet-stream"
 
             with open(file_path, "rb") as f:
                 file_data = f.read()
@@ -171,9 +168,7 @@ class PixbinClient:
             filename = getattr(file_path, "name", "image.jpg")
             file_data = file_path.read()
             file_size = len(file_data)
-            content_type = (
-                mimetypes.guess_type(filename)[0] or "application/octet-stream"
-            )
+            content_type = mimetypes.guess_type(filename)[0] or "application/octet-stream"
 
         # Phase 1: Start upload
         start_response = self._post(
@@ -199,12 +194,10 @@ class PixbinClient:
         # Phase 2: Upload to S3
         try:
             files = {"file": (filename, file_data, content_type)}
-            s3_response = requests.post(
-                upload_url, data=upload_fields, files=files, timeout=self.timeout
-            )
+            s3_response = requests.post(upload_url, data=upload_fields, files=files, timeout=self.timeout)
             s3_response.raise_for_status()
         except requests.RequestException as e:
-            raise PixbinUploadError(f"S3 upload failed: {e}")
+            raise PixbinUploadError(f"S3 upload failed: {e}") from e
 
         # Extract dimensions for immediate availability (enables skeleton layouts)
         width, height = self._extract_dimensions(file_data)
@@ -284,19 +277,15 @@ class PixbinClient:
 
         Uses the API token as the signing key.
         """
-        import hmac
         import hashlib
+        import hmac
 
         message = f"{image_id}:{params}"
-        signature = hmac.new(
-            self.api_token.encode(), message.encode(), hashlib.sha256
-        ).hexdigest()
+        signature = hmac.new(self.api_token.encode(), message.encode(), hashlib.sha256).hexdigest()
         # Return first 16 chars for shorter URLs
         return signature[:16]
 
-    def transform_url(
-        self, image_id: str, params: str, include_host: bool = True
-    ) -> str:
+    def transform_url(self, image_id: str, params: str, include_host: bool = True) -> str:
         """
         Generate signed transformation URL.
 
@@ -323,9 +312,7 @@ class PixbinClient:
             return f"{self.base_url}{path}"
         return path
 
-    def download_transformed(
-        self, image_id: str, params: str, max_retries: int = 3, retry_delay: float = 2.0
-    ) -> bytes:
+    def download_transformed(self, image_id: str, params: str, max_retries: int = 3, retry_delay: float = 2.0) -> bytes:
         """
         Download transformed image bytes.
 
@@ -361,9 +348,7 @@ class PixbinClient:
                     time.sleep(retry_delay)
                     continue
                 else:
-                    raise PixbinError(
-                        "Transformation timeout - variant still processing"
-                    )
+                    raise PixbinError("Transformation timeout - variant still processing")
             else:
                 response.raise_for_status()
 

@@ -28,14 +28,14 @@ Usage:
 from importlib.metadata import PackageNotFoundError, version
 
 from .client import (
+    PixbinAuthError,
     PixbinClient,
     PixbinError,
-    PixbinAuthError,
     PixbinQuotaError,
     PixbinUploadError,
-    thumbnail,
     crop_square,
     optimize_web,
+    thumbnail,
 )
 
 try:
@@ -45,12 +45,12 @@ except PackageNotFoundError:
     __version__ = "0.0.0"
 
 __all__ = [
+    "PixbinAuthError",
     "PixbinClient",
     "PixbinError",
-    "PixbinAuthError",
     "PixbinQuotaError",
     "PixbinUploadError",
-    "thumbnail",
     "crop_square",
     "optimize_web",
+    "thumbnail",
 ]
