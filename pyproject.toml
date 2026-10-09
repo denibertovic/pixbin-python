@@ -31,6 +31,7 @@ dependencies = [
 
 [project.optional-dependencies]
 full = ["Pillow>=9.0.0"]
+dev = ["pytest>=7.0", "responses>=0.23"]
 
 [project.urls]
 Documentation = "https://pixbin.net/docs"
@@ -43,3 +44,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["."]
+include = ["pixbin*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
