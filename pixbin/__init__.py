@@ -25,6 +25,8 @@ Usage:
     image_bytes = client.download_transformed(image_id, "resize:300x300:fit")
 """
 
+from importlib.metadata import PackageNotFoundError, version
+
 from .client import (
     PixbinClient,
     PixbinError,
@@ -36,7 +38,11 @@ from .client import (
     optimize_web,
 )
 
-__version__ = "0.1.0"
+try:
+    __version__ = version("pixbin")
+except PackageNotFoundError:
+    # Running from a source checkout that was not pip-installed.
+    __version__ = "0.0.0"
 
 __all__ = [
     "PixbinClient",
