@@ -83,6 +83,13 @@ class PixbinClient:
         self._handle_errors(response)
         return response
 
+    def _delete(self, endpoint: str, **kwargs) -> requests.Response:
+        """Make DELETE request."""
+        url = f"{self.base_url}{endpoint}"
+        response = self.session.delete(url, timeout=self.timeout, **kwargs)
+        self._handle_errors(response)
+        return response
+
     def _handle_errors(self, response: requests.Response):
         """Handle HTTP errors."""
         if response.status_code == 401:
@@ -235,6 +242,22 @@ class PixbinClient:
             time.sleep(poll_interval)
 
         raise PixbinUploadError(f"Processing timeout after {max_wait}s")
+
+    def delete(self, image_id: str) -> None:
+        """
+        Delete an image and all its processed variants.
+
+        Args:
+            image_id: Image UUID
+
+        Raises:
+            PixbinAuthError: If authentication fails
+            PixbinError: If image not found or other error
+
+        Example:
+            >>> client.delete(image_id)
+        """
+        self._delete(f"/api/v1/image/{image_id}/delete")
 
     def get_status(self, image_id: str) -> Dict[str, Any]:
         """
