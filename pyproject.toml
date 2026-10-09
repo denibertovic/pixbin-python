@@ -33,6 +33,11 @@ dependencies = [
 full = ["Pillow>=9.0.0"]
 dev = ["pytest>=7.0", "responses>=0.23", "ruff>=0.16"]
 
+# `uv sync` installs the dev group by default but never installs extras on
+# its own, so the group points back at the extras to keep one list of tools.
+[dependency-groups]
+dev = ["pixbin[dev,full]"]
+
 [project.urls]
 Documentation = "https://pixbin.net/docs"
 Source = "https://github.com/denibertovic/pixbin-python"
