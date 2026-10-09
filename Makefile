@@ -42,11 +42,21 @@ clean: clean-build
 	@rm -rf .pytest_cache .ruff_cache
 
 ## Bump the version, commit and tag it (pass VERSION=x.y.z). Push the tag to publish.
-release: require-VERSION check
+release: require-VERSION
+	@if ! git diff --quiet || ! git diff --cached --quiet; then \
+		echo "ERROR: working tree is not clean, commit or stash first"; \
+		exit 1; \
+	fi
+	@if git rev-parse -q --verify "refs/tags/v${VERSION}" > /dev/null; then \
+		echo "ERROR: tag v${VERSION} already exists"; \
+		exit 1; \
+	fi
+	@$(MAKE) check
 	@uv version ${VERSION}
 	@git add pyproject.toml uv.lock
-	@git commit -m "release v${VERSION}"
-	@git tag "v${VERSION}"
+	@# Nothing to commit when the version was already set, e.g. the first release
+	@git diff --cached --quiet || git commit -m "release v${VERSION}"
+	@git tag -m "v${VERSION}" "v${VERSION}"
 	@echo
 	@echo "Tagged v${VERSION}. To publish to PyPI run:"
 	@echo "  git push origin main v${VERSION}"
