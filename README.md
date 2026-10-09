@@ -4,20 +4,27 @@ Official Python client library for the Pixbin Image API.
 
 ## Installation
 
+The package is published on PyPI as [`pixbin`](https://pypi.org/project/pixbin/).
+
 ```bash
-uv add git+https://github.com/denibertovic/pixbin-python.git
+uv add pixbin
 ```
 
 Or with pip:
 
 ```bash
-pip install git+https://github.com/denibertovic/pixbin-python.git
+pip install pixbin
 ```
 
-With all features (recommended):
+With all features (recommended), which adds Pillow so uploads include image
+dimensions:
 
 ```bash
-uv add "pixbin[full] @ git+https://github.com/denibertovic/pixbin-python.git"
+uv add "pixbin[full]"
+```
+
+```bash
+pip install "pixbin[full]"
 ```
 
 ## Quick Start
@@ -362,7 +369,7 @@ Check your current usage in the Pixbin dashboard.
 
 - **Documentation**: https://pixbin.net/docs
 - **API Reference**: https://pixbin.net/api/docs
-- **Issues**: https://github.com/pixbin/pixbin-python/issues
+- **Issues**: https://github.com/denibertovic/pixbin-python/issues
 - **Contact**: https://pixbin.net/contact/
 
 ## Contributing
