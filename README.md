@@ -365,6 +365,47 @@ Check your current usage in the Pixbin dashboard.
 - **Issues**: https://github.com/pixbin/pixbin-python/issues
 - **Contact**: https://pixbin.net/contact/
 
+## Contributing
+
+The repo ships a [devenv](https://devenv.sh) configuration that provides
+Python, a virtualenv with the package installed in editable mode, and
+pre-commit hooks for ruff.
+
+```bash
+# One time: install Nix and devenv, see https://devenv.sh/getting-started/
+devenv shell        # or `direnv allow` to enter the shell automatically
+
+make help           # list all targets
+make lint           # ruff lint and format check
+make format         # auto-fix and reformat
+make test           # run the test suite, e.g. make test ARGS="-k upload"
+make check          # lint + test, the same gates CI runs on pull requests
+make build          # build sdist and wheel into dist/
+```
+
+Without devenv, any Python 3.8 or newer works. With uv:
+
+```bash
+uv sync             # installs the package plus the dev tooling into .venv
+uv run make check
+```
+
+Or with plain pip:
+
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -e ".[dev,full]"
+make check
+```
+
+Releases are published to PyPI by the `cicd.yaml` workflow when a `v*` tag is
+pushed. The tag must match the version in `pyproject.toml`. To cut one:
+
+```bash
+make release VERSION=0.2.0   # bumps pyproject.toml, commits, tags v0.2.0
+git push origin main v0.2.0  # triggers the publish job
+```
+
 ## License
 
 MIT License - see LICENSE file for details.

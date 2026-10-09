@@ -1,0 +1,8 @@
+name: PR
+
+on:
+  pull_request:
+
+jobs:
+  checks:
+    uses: ./.github/workflows/pr-checks.yaml
